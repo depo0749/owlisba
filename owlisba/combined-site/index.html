@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Owlisba - Gaming & Minecraft Server</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:wght@400;700&family=Syne:wght@400;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    :root {
+      --bg: #0a0a0f;
+      --bg2: #111118;
+      --surface: #1c1c28;
+      --border: #2a2a3d;
+      --accent: #ff5f1f;
+      --accent-glow: rgba(255, 95, 31, 0.3);
+      --green: #39ff14;
+      --minecraft: #5b8c2a;
+      --minecraft-light: #7dc733;
+      --text: #f0f0f8;
+      --text2: #a0a0b8;
+      --text3: #606078;
+      --font-display: 'Bebas Neue', sans-serif;
+      --font-body: 'Syne', sans-serif;
+      --font-mono: 'Space Mono', monospace;
+    }
+    
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    
+    html { scroll-behavior: smooth; }
+    
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-body);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+    
+    .logo {
+      font-family: var(--font-display);
+      font-size: clamp(3rem, 10vw, 6rem);
+      letter-spacing: 4px;
+      margin-bottom: 0.5rem;
+      text-align: center;
+    }
+    
+    .logo span { color: var(--accent); }
+    
+    .subtitle {
+      color: var(--text2);
+      font-family: var(--font-mono);
+      font-size: 0.9rem;
+      letter-spacing: 2px;
+      margin-bottom: 3rem;
+      text-transform: uppercase;
+    }
+    
+    .sites-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 2rem;
+      max-width: 900px;
+      width: 100%;
+    }
+    
+    .site-card {
+      background: var(--surface);
+      border: 2px solid var(--border);
+      border-radius: 20px;
+      padding: 3rem 2rem;
+      text-align: center;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      color: var(--text);
+    }
+    
+    .site-card:hover {
+      transform: translateY(-10px);
+    }
+    
+    .site-card.gaming:hover {
+      border-color: var(--accent);
+      box-shadow: 0 20px 60px rgba(255, 95, 31, 0.2);
+    }
+    
+    .site-card.minecraft:hover {
+      border-color: var(--minecraft);
+      box-shadow: 0 20px 60px rgba(91, 140, 42, 0.2);
+    }
+    
+    .site-icon {
+      font-size: 4rem;
+      margin-bottom: 1.5rem;
+    }
+    
+    .site-card.gaming .site-icon { filter: drop-shadow(0 0 20px var(--accent-glow)); }
+    .site-card.minecraft .site-icon { filter: drop-shadow(0 0 20px rgba(91, 140, 42, 0.3)); }
+    
+    .site-title {
+      font-family: var(--font-display);
+      font-size: 2rem;
+      letter-spacing: 2px;
+      margin-bottom: 0.5rem;
+    }
+    
+    .site-card.gaming .site-title { color: var(--accent); }
+    .site-card.minecraft .site-title { color: var(--minecraft-light); }
+    
+    .site-desc {
+      color: var(--text2);
+      font-size: 0.9rem;
+      line-height: 1.6;
+      margin-bottom: 1.5rem;
+    }
+    
+    .site-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.8rem 1.5rem;
+      border-radius: 8px;
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      transition: all 0.3s ease;
+    }
+    
+    .site-card.gaming .site-btn {
+      background: var(--accent);
+      color: #fff;
+    }
+    
+    .site-card.minecraft .site-btn {
+      background: var(--minecraft);
+color: #fff;
+    }
+    
+    .site-card:hover .site-btn {
+      transform: scale(1.05);
+    }
+    
+    .footer {
+      margin-top: 3rem;
+      text-align: center;
+      color: var(--text3);
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+    }
+    
+    .footer a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+    
+    @media (max-width: 768px) {
+      .sites-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <h1 class="logo">OWL<span>ISBA</span></h1>
+  <p class="subtitle">Gaming & Minecraft Sunucusu</p>
+  
+  <div class="sites-grid">
+    <a href="main/index.html" class="site-card gaming">
+      <div class="site-icon">🦉</div>
+      <h2 class="site-title">Gaming Sitesi</h2>
+      <p class="site-desc">
+        FiveM, CS2 ve Minecraft videoları.<br>
+        Yayın takvimi, hakkımda ve daha fazlası.
+      </p>
+      <span class="site-btn">
+        <i class="fa-solid fa-gamepad"></i> Siteye Git
+      </span>
+    </a>
+    
+    <a href="minecraft/index.html" class="site-card minecraft">
+      <div class="site-icon">⛏️</div>
+      <h2 class="site-title">Minecraft Sunucusu</h2>
+      <p class="site-desc">
+        Hardcore survival deneyimi.<br>
+        Canlı istatistikler, rütbeler ve kurallar.
+      </p>
+      <span class="site-btn">
+        <i class="fa-solid fa-server"></i> Sunucuya Git
+      </span>
+    </a>
+  </div>
+  
+  <div class="footer">
+    <p>© 2024 Owlisba • <a href="https://discord.com/invite/f5wYekYN5y" target="_blank">Discord</a></p>
+  </div>
+</body>
+</html>
