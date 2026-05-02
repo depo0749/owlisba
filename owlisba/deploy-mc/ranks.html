@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Rütbeler — Owlisba Minecraft Sunucusu</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:wght@400;700&family=Syne:wght@400;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    .ranks-hero {
+      min-height: 40vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 120px 2rem 4rem;
+      background: linear-gradient(180deg, #0d1a05 0%, #0a0a0f 100%);
+      border-bottom: 1px solid var(--border);
+      text-align: center;
+    }
+    
+    .ranks-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+    
+    .rank-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 2rem;
+      text-align: center;
+      transition: var(--transition);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .rank-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+    }
+    
+    .rank-card.stone::before { background: #888; }
+    .rank-card.wood::before { background: #5b8c2a; }
+    .rank-card.iron::before { background: var(--accent); }
+    .rank-card.gold::before { background: linear-gradient(90deg, #ffd700, #ffed4a); }
+    .rank-card.diamond::before { background: linear-gradient(90deg, #00b4ff, #7dc733); }
+    .rank-card.emerald::before { background: linear-gradient(90deg, #50c878, #39ff14); }
+    
+    .rank-card:hover {
+      transform: translateY(-8px);
+    }
+    
+    .rank-icon {
+      font-size: 3.5rem;
+      margin-bottom: 1rem;
+    }
+    
+    .rank-name {
+      font-family: var(--font-display);
+      font-size: 1.8rem;
+      letter-spacing: 2px;
+      margin-bottom: 0.5rem;
+    }
+    
+    .rank-card.stone .rank-name { color: #888; }
+    .rank-card.wood .rank-name { color: #7dc733; }
+    .rank-card.iron .rank-name { color: var(--accent); }
+    .rank-card.gold .rank-name { color: #ffd700; }
+    .rank-card.diamond .rank-name { color: #00b4ff; }
+    .rank-card.emerald .rank-name { color: #50c878; }
+    
+    .rank-price {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      color: var(--text3);
+      margin-bottom: 1.5rem;
+    }
+    
+    .rank-features {
+      list-style: none;
+      text-align: left;
+    }
+    
+    .rank-features li {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      padding: 0.6rem 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.85rem;
+      color: var(--text2);
+    }
+    
+    .rank-features li:last-child {
+      border-bottom: none;
+    }
+    
+    .rank-features li i {
+      color: var(--green);
+      font-size: 0.8rem;
+    }
+    
+    .rank-features li.disabled {
+      color: var(--text3);
+    }
+    
+    .rank-features li.disabled i {
+      color: #e74c3c;
+    }
+    
+    .rank-btn {
+      width: 100%;
+      margin-top: 1.5rem;
+      padding: 0.8rem;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--text);
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      border-radius: 8px;
+      cursor: none;
+      transition: var(--transition);
+    }
+    
+    .rank-card.stone .rank-btn:hover { background: #888; border-color: #888; }
+    .rank-card.wood .rank-btn:hover { background: #5b8c2a; border-color: #5b8c2a; }
+    .rank-card.iron .rank-btn:hover { background: var(--accent); border-color: var(--accent); }
+    .rank-card.gold .rank-btn:hover { background: #ffd700; border-color: #ffd700; color: #000; }
+    .rank-card.diamond .rank-btn:hover { background: #00b4ff; border-color: #00b4ff; }
+    .rank-card.emerald .rank-btn:hover { background: #50c878; border-color: #50c878; }
+    
+    .comparison-table {
+      width: 100%;
+      border-collapse: collapse;
+      background: var(--surface);
+      border-radius: 16px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      margin-top: 2rem;
+    }
+    
+    .comparison-table th,
+    .comparison-table td {
+      padding: 1rem;
+      text-align: center;
+      border-bottom: 1px solid var(--border);
+    }
+    
+    .comparison-table th {
+      background: var(--surface2);
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text3);
+    }
+    
+    .comparison-table td {
+      color: var(--text2);
+      font-size: 0.9rem;
+    }
+    
+    .comparison-table td:first-child {
+      text-align: left;
+      font-weight: 600;
+      color: var(--text);
+    }
+    
+    .comparison-table .check {
+      color: var(--green);
+    }
+    
+    .comparison-table .cross {
+      color: #e74c3c;
+    }
+    
+    .faq-section {
+      margin-top: 3rem;
+    }
+    
+    .faq-item {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      margin-bottom: 1rem;
+    }
+    
+    .faq-q {
+      padding: 1.2rem 1.5rem;
+      background: var(--surface);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: none;
+      font-weight: 700;
+      transition: var(--transition);
+    }
+    
+    .faq-q:hover {
+      background: var(--surface2);
+      color: var(--accent);
+    }
+    
+    .faq-a {
+      padding: 0 1.5rem;
+      max-height: 0;
+      overflow: hidden;
+      background: var(--bg2);
+      transition: max-height 0.3s ease, padding 0.3s ease;
+      color: var(--text2);
+      line-height: 1.8;
+      font-size: 0.9rem;
+    }
+    
+    .faq-item.open .faq-a {
+      max-height: 200px;
+      padding: 1.2rem 1.5rem;
+    }
+    
+    .faq-item.open .faq-q i {
+      transform: rotate(45deg);
+    }
+    
+    .faq-q i {
+      transition: transform 0.3s;
+      color: var(--accent);
+    }
+    
+    @media (max-width: 1100px) {
+      .ranks-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    
+    @media (max-width: 640px) {
+      .ranks-grid { grid-template-columns: 1fr; }
+      .comparison-table { font-size: 0.75rem; }
+      .comparison-table th,
+      .comparison-table td { padding: 0.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-trail" id="cursorTrail"></div>
+
+<nav class="navbar" id="navbar">
+  <div class="nav-logo">
+    <span class="logo-owl">⛏️</span>
+    <span class="logo-text">OWLISBA MC</span>
+  </div>
+  <ul class="nav-links">
+    <li><a href="index.html">Ana Sayfa</a></li>
+    <li><a href="stats.html">İstatistikler</a></li>
+    <li><a href="ranks.html" class="active">Rütbeler</a></li>
+    <li><a href="rules.html">Kurallar</a></li>
+  </ul>
+  <div class="nav-socials">
+    <a href="https://discord.com/invite/f5wYekYN5y" target="_blank"><i class="fa-brands fa-discord"></i></a>
+    <a href="../owlisba-main/index.html"><i class="fa-solid fa-arrow-left"></i></a>
+  </div>
+  <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+</nav>
+
+<div class="mobile-menu" id="mobileMenu">
+  <a href="index.html">Ana Sayfa</a>
+  <a href="stats.html">İstatistikler</a>
+  <a href="ranks.html">Rütbeler</a>
+  <a href="rules.html">Kurallar</a>
+</div>
+
+<!-- HERO -->
+<section class="ranks-hero">
+  <div>
+    <span class="section-tag">RÜTBE SİSTEMİ</span>
+    <h1 style="font-family: var(--font-display); font-size: clamp(2.5rem, 6vw, 5rem); letter-spacing: 2px; margin: 1rem 0;">
+      Sunucu <span style="color: var(--accent);">Rütbeleri</span>
+    </h1>
+    <p style="color: var(--text2); max-width: 500px; margin: 0 auto;">
+      Her rütbe yeni avantajlar getirir. Daha fazla özellik için rütbeni yükselt!
+    </p>
+  </div>
+</section>
+
+<!-- RANKS -->
+<section class="section">
+  <div class="ranks-grid">
+    <div class="rank-card stone">
+      <div class="rank-icon">🪨</div>
+      <h3 class="rank-name">TAŞ</h3>
+      <div class="rank-price">Ücretsiz</div>
+      <ul class="rank-features">
+        <li><i class="fa-solid fa-check"></i> Temel erişim</li>
+        <li><i class="fa-solid fa-check"></i> Sunucuya bağlanma</li>
+        <li><i class="fa-solid fa-check"></i> Liderlik tablosu</li>
+        <li class="disabled"><i class="fa-solid fa-xmark"></i> Özel renk</li>
+        <li class="disabled"><i class="fa-solid fa-xmark"></i> Ekstra envanter</li>
+      </ul>
+      <button class="rank-btn">Şimdi Sahipsin</button>
+    </div>
+    
+    <div class="rank-card wood">
+      <div class="rank-icon">🌿</div>
+      <h3 class="rank-name">ODUN</h3>
+      <div class="rank-price">Discord'a Katıl</div>
+      <ul class="rank-features">
+        <li><i class="fa-solid fa-check"></i> Tüm Taş özellikleri</li>
+        <li><i class="fa-solid fa-check"></i> Özel başlangıç kiti</li>
+        <li><i class="fa-solid fa-check"></i> Özel nick rengi</li>
+        <li><i class="fa-solid fa-check"></i> Etkinlik önceliği</li>
+        <li class="disabled"><i class="fa-solid fa-xmark"></i> Ekstra envanter</li>
+      </ul>
+      <button class="rank-btn">Discord'a Katıl</button>
+    </div>
+    
+    <div class="rank-card iron">
+      <div class="rank-icon">🔥</div>
+      <h3 class="rank-name">DEMİR</h3>
+      <div class="rank-price">Abone/Takipçi</div>
+      <ul class="rank-features">
+        <li><i class="fa-solid fa-check"></i> Tüm Odun özellikleri</li>
+        <li><i class="fa-solid fa-check"></i> Özel spawn noktası</li>
+        <li><i class="fa-solid fa-check"></i> Ekstra envanter satırı</li>
+        <li><i class="fa-solid fa-check"></i> VIP kanalları</li>
+        <li class="disabled"><i class="fa-solid fa-xmark"></i> Yayın görünürlüğü</li>
+      </ul>
+      <button class="rank-btn">Abone Ol</button>
+    </div>
+    
+    <div class="rank-card gold">
+      <div class="rank-icon">👑</div>
+      <h3 class="rank-name">ALTIN</h3>
+      <div class="rank-price">Aylık Destek</div>
+      <ul class="rank-features">
+        <li><i class="fa-solid fa-check"></i> Tüm Demir özellikleri</li>
+        <li><i class="fa-solid fa-check"></i> 2 ekstra envanter satırı</li>
+        <li><i class="fa-solid fa-check"></i> Özel başarımlar</li>
+        <li><i class="fa-solid fa-check"></i> Özel komutlar</li>
+        <li><i class="fa-solid fa-check"></i> Öncelikli destek</li>
+      </ul>
+      <button class="rank-btn">Satın Al</button>
+    </div>
+  </div>
+</section>
+
+<!-- COMPARISON TABLE -->
+<section class="section" style="background: var(--bg2); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
+  <div class="section-header">
+    <span class="section-tag">DETAYLI KARŞILAŞTIRMA</span>
+    <h2>Özellik <span style="color: var(--accent);">Tablosu</span></h2>
+  </div>
+  <table class="comparison-table">
+    <thead>
+      <tr>
+        <th>Özellik</th>
+        <th>🪨 Taş</th>
+        <th>🌿 Odun</th>
+        <th>🔥 Demir</th>
+        <th>👑 Altın</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Sunucu Erişimi</td>
+        <td class="check"><i class="fa-solid fa-check"></i></td>
+        <td class="check"><i class="fa-solid fa-check"></i></td>
+        <td class="check"><i class="fa-solid fa-check"></i></td>
+        <td class="check"><i class="fa-solid fa-check"></i></td>
+      </tr>
+      <tr>
+        <td>Liderlik Tablosu</td>
+        <td class="check"><i class="fa-solid fa-check"></i></td>
+        <td class="check"><i class="fa-solid fa-check"></i></td>
+        <td class="check"><i class="fa-solid fa-check"></i></td>
+        <td class="check"><i class="fa-solid fa-check"></i></td>
+      </tr>
+      <tr>
+        <td>Başlangıç Kiti</td>
+        <td class="cross"><i class="fa-solid fa-xmark"></i></td>
+        <td class="check"><i class="fa-solid fa-check"></i></td>
+        <td class="check"><i class="fa-solid fa-check"></i></td>
+        <td class="check"><i class="fa-solid fa-check"></i></td>
+      </tr>
+      <tr>
+        <td>Özel Nick Rengi</td>
+        <td class="cross"><i class="fa-solid fa-xmark"></i></td>
+        <td class="check"><i class="fa-solid fa-check"></i></td>
+        <td class="check"><i class="fa-solid fa-check"></i></td>
+        <td class="check"><i class="fa-solid fa-check"></i></td>
+      </tr>
+      <tr>
+        <td>Etkinlik Önceliği</td>
+        <td class="cross"><i class="fa-solid fa-xmark"></i></td>
+        <td class="check"><i class="fa-solid fa-check"></i></td>
+        <td class="check"><i class="fa-solid fa-check"></i></td>
+        <td class="check"><i class="fa-solid fa-check"></i></td>
+      </tr>
+      <tr>
+        <td>Özel Spawn</td>
+        <td class="cross"><i class="fa-solid fa-xmark"></i></td>
+        <td class="cross"><i class="fa-solid fa-xmark"></i></td>
+        <td class="check"><i class="fa-solid fa-check"></i></td>
+        <td class="check"><i class="fa-solid fa-check"></i></td>
+      </tr>
+      <tr>
+        <td>Ekstra Envanter</td>
+        <td class="cross"><i class="fa-solid fa-xmark"></i></td>
+        <td class="cross"><i class="fa-solid fa-xmark"></i></td>
+        <td>+1 Satır</td>
+        <td>+2 Satır</td>
+      </tr>
+      <tr>
+        <td>VIP Kanalları</td>
+        <td class="cross"><i class="fa-solid fa-xmark"></i></td>
+        <td class="cross"><i class="fa-solid fa-xmark"></i></td>
+        <td class="check"><i class="fa-solid fa-check"></i></td>
+        <td class="check"><i class="fa-solid fa-check"></i></td>
+      </tr>
+      <tr>
+        <td>Özel Başarımlar</td>
+        <td class="cross"><i class="fa-solid fa-xmark"></i></td>
+        <td class="cross"><i class="fa-solid fa-xmark"></i></td>
+        <td class="cross"><i class="fa-solid fa-xmark"></i></td>
+        <td class="check"><i class="fa-solid fa-check"></i></td>
+      </tr>
+      <tr>
+        <td>Öncelikli Destek</td>
+        <td class="cross"><i class="fa-solid fa-xmark"></i></td>
+        <td class="cross"><i class="fa-solid fa-xmark"></i></td>
+        <td class="cross"><i class="fa-solid fa-xmark"></i></td>
+        <td class="check"><i class="fa-solid fa-check"></i></td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- FAQ -->
+<section class="section">
+  <div class="section-header">
+    <span class="section-tag">SIKÇA SORULAN SORULAR</span>
+    <h2>Rütbe <span style="color: var(--accent);">SSS</span></h2>
+  </div>
+  <div class="faq-section">
+    <div class="faq-item">
+      <div class="faq-q">
+        Rütbemi nasıl yükseltebilirim?
+        <i class="fa-solid fa-plus"></i>
+      </div>
+      <div class="faq-a">
+        Discord sunucumuza katılarak, YouTube kanalımıza abone olarak veya Kick'te bizi takip ederek ücretsiz rütbeler kazanabilirsin. 
+        Altın rütbe için destek sayfamız üzerinden aylık bağış yapabilirsin.
+      </div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">
+        Rütbe avantajları ne zaman aktif olur?
+        <i class="fa-solid fa-plus"></i>
+      </div>
+      <div class="faq-a">
+        Discord'a katıldıktan veya abone olduktan sonra rütbeniz otomatik olarak 5-10 dakika içinde aktif olacaktır. 
+        Eğer bir sorun yaşarsanız, Discord üzerinden yetkili birine ulaşabilirsiniz.
+      </div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">
+        Rütbem süresi dolarsa ne olur?
+        <i class="fa-solid fa-plus"></i>
+      </div>
+      <div class="faq-a">
+        Aylık rütbelerin süresi dolduğunda otomatik olarak bir alt rütbeye düşersiniz. 
+        Tüm eşyalarınız ve ilerlemeniz korunur, sadece rütbe avantajları değişir.
+      </div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">
+        Rütbe değişikliği istatistiklerimi etkiler mi?
+        <i class="fa-solid fa-plus"></i>
+      </div>
+      <div class="faq-a">
+        Hayır, rütbe değişikliği oyun içi istatistiklerinizi, eşyalarınızı veya ilerlemenizi etkilemez. 
+        Sadece sunucu avantajları ve görünüm değişiklikleri olur.
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="footer-top">
+    <div class="footer-brand">
+      <span class="logo-owl">⛏️</span>
+      <span class="logo-text">OWLISBA MC</span>
+      <p>Hardcore Minecraft Sunucusu</p>
+    </div>
+    <div class="footer-links">
+      <div class="footer-col">
+        <h4>Sayfalar</h4>
+        <a href="index.html">Ana Sayfa</a>
+        <a href="stats.html">İstatistikler</a>
+        <a href="ranks.html">Rütbeler</a>
+        <a href="rules.html">Kurallar</a>
+      </div>
+      <div class="footer-col">
+        <h4>Bağlantılar</h4>
+        <a href="https://discord.com/invite/f5wYekYN5y" target="_blank">Discord</a>
+        <a href="../owlisba-main/index.html">Ana Site</a>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2024 Owlisba Minecraft Sunucusu. Tüm hakları saklıdır.</p>
+    <p>Made with 🦉 + ⛏️</p>
+  </div>
+</footer>
+
+<a href="../owlisba-main/index.html" class="back-link" title="Ana Siteye Dön">
+  <i class="fa-solid fa-arrow-left"></i>
+</a>
+
+<script src="main.js"></script>
+<script>
+  // FAQ Accordion
+  document.querySelectorAll('.faq-q').forEach(q => {
+    q.addEventListener('click', () => {
+      const item = q.closest('.faq-item');
+      const isOpen = item.classList.contains('open');
+      document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+      if (!isOpen) item.classList.add('open');
+    });
+  });
+</script>
+</body>
+</html>
