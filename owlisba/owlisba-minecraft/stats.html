@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>İstatistikler — Owlisba Minecraft Sunucusu</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:wght@400;700&family=Syne:wght@400;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    .stats-hero {
+      min-height: 50vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 120px 2rem 4rem;
+      background: linear-gradient(180deg, #0d1a05 0%, #0a0a0f 100%);
+      border-bottom: 1px solid var(--border);
+      text-align: center;
+    }
+    
+    .big-stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+    
+    .big-stat-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 2rem;
+      text-align: center;
+      transition: var(--transition);
+    }
+    
+    .big-stat-card:hover {
+      transform: translateY(-5px);
+      border-color: #5b8c2a;
+    }
+    
+    .big-stat-icon {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+    }
+    
+    .big-stat-value {
+      font-family: var(--font-display);
+      font-size: 3rem;
+      color: var(--accent);
+      line-height: 1;
+    }
+    
+    .big-stat-label {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--text3);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-top: 0.5rem;
+    }
+    
+    .chart-container {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 2rem;
+      margin: 2rem 0;
+    }
+    
+    .chart-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    
+    .chart-title {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      letter-spacing: 1px;
+    }
+    
+    .chart-period {
+      display: flex;
+      gap: 0.5rem;
+    }
+    
+    .period-btn {
+      padding: 0.4rem 1rem;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text2);
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      cursor: none;
+      transition: var(--transition);
+    }
+    
+    .period-btn:hover, .period-btn.active {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff;
+    }
+    
+    .bar-chart {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      height: 200px;
+      gap: 0.5rem;
+      padding: 1rem 0;
+    }
+    
+    .bar-item {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .bar {
+      width: 100%;
+      background: linear-gradient(to top, #5b8c2a, #7dc733);
+      border-radius: 4px 4px 0 0;
+      transition: var(--transition);
+      min-height: 20px;
+    }
+    
+    .bar:hover {
+      opacity: 0.8;
+    }
+    
+    .bar-label {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      color: var(--text3);
+    }
+    
+    .top-players-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+    }
+    
+    .top-player-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      transition: var(--transition);
+    }
+    
+    .top-player-card:hover {
+      transform: translateY(-3px);
+      border-color: var(--accent);
+    }
+    
+    .top-player-rank {
+      font-family: var(--font-display);
+      font-size: 2rem;
+      color: var(--text3);
+      width: 40px;
+    }
+    
+    .top-player-rank.gold { color: #ffd700; }
+    .top-player-rank.silver { color: #c0c0c0; }
+    .top-player-rank.bronze { color: #cd7f32; }
+    
+    .top-player-avatar {
+      width: 50px;
+      height: 50px;
+      background: var(--bg);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      border: 2px solid var(--border);
+    }
+    
+    .top-player-info {
+      flex: 1;
+    }
+    
+    .top-player-name {
+      font-weight: 700;
+      margin-bottom: 0.2rem;
+    }
+    
+    .top-player-stat {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--text3);
+    }
+    
+    .top-player-value {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      color: var(--accent);
+    }
+    
+    .live-indicator {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--green);
+      background: rgba(57, 255, 20, 0.1);
+      padding: 0.3rem 0.8rem;
+      border-radius: 100px;
+    }
+    
+    .live-indicator::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      background: var(--green);
+      border-radius: 50%;
+      animation: pulse 1.5s ease-in-out infinite;
+    }
+    
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+    
+    .server-history {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    
+    .history-item {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1rem 1.5rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+    }
+    
+    .history-time {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--text3);
+      min-width: 80px;
+    }
+    
+    .history-event {
+      flex: 1;
+      color: var(--text2);
+    }
+    
+    .history-event strong {
+      color: var(--text);
+    }
+    
+    @media (max-width: 1100px) {
+      .big-stats-grid { grid-template-columns: repeat(2, 1fr); }
+      .top-players-grid { grid-template-columns: 1fr; }
+    }
+    
+    @media (max-width: 640px) {
+      .big-stats-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-trail" id="cursorTrail"></div>
+
+<nav class="navbar" id="navbar">
+  <div class="nav-logo">
+    <span class="logo-owl">⛏️</span>
+    <span class="logo-text">OWLISBA MC</span>
+  </div>
+  <ul class="nav-links">
+    <li><a href="index.html">Ana Sayfa</a></li>
+    <li><a href="stats.html" class="active">İstatistikler</a></li>
+    <li><a href="ranks.html">Rütbeler</a></li>
+    <li><a href="rules.html">Kurallar</a></li>
+  </ul>
+  <div class="nav-socials">
+    <a href="https://discord.com/invite/f5wYekYN5y" target="_blank"><i class="fa-brands fa-discord"></i></a>
+    <a href="../owlisba-main/index.html"><i class="fa-solid fa-arrow-left"></i></a>
+  </div>
+  <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+</nav>
+
+<div class="mobile-menu" id="mobileMenu">
+  <a href="index.html">Ana Sayfa</a>
+  <a href="stats.html">İstatistikler</a>
+  <a href="ranks.html">Rütbeler</a>
+  <a href="rules.html">Kurallar</a>
+</div>
+
+<!-- HERO -->
+<section class="stats-hero">
+  <div>
+    <span class="section-tag">CANLI VERİLER</span>
+    <h1 style="font-family: var(--font-display); font-size: clamp(2.5rem, 6vw, 5rem); letter-spacing: 2px; margin: 1rem 0;">
+      Sunucu <span style="color: var(--accent);">İstatistikleri</span>
+    </h1>
+    <p style="color: var(--text2); max-width: 500px; margin: 0 auto;">
+      Gerçek zamanlı oyuncu verileri, sıralamalar ve sunucu istatistikleri
+    </p>
+    <div style="margin-top: 1.5rem;">
+      <span class="live-indicator">Canlı Veri</span>
+    </div>
+  </div>
+</section>
+
+<!-- BIG STATS -->
+<section class="section">
+  <div class="big-stats-grid">
+    <div class="big-stat-card">
+      <div class="big-stat-icon">👥</div>
+      <div class="big-stat-value live-player-count">47</div>
+      <div class="big-stat-label">Çevrimiçi Oyuncu</div>
+    </div>
+    <div class="big-stat-card">
+      <div class="big-stat-icon">📊</div>
+      <div class="big-stat-value">1,247</div>
+      <div class="big-stat-label">Toplam Oyuncu</div>
+    </div>
+    <div class="big-stat-card">
+      <div class="big-stat-icon">⏱️</div>
+      <div class="big-stat-value">156</div>
+      <div class="big-stat-label">Gün 7/24 Açık</div>
+    </div>
+    <div class="big-stat-card">
+      <div class="big-stat-icon">💀</div>
+      <div class="big-stat-value">3,892</div>
+      <div class="big-stat-label">Toplam Ölüm</div>
+    </div>
+  </div>
+</section>
+
+<!-- PLAYER CHART -->
+<section class="section" style="background: var(--bg2); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
+  <div class="chart-container">
+    <div class="chart-header">
+      <h3 class="chart-title">Günlük Oyuncu Grafiği</h3>
+      <div class="chart-period">
+        <button class="period-btn">24S</button>
+        <button class="period-btn active">7G</button>
+        <button class="period-btn">30G</button>
+      </div>
+    </div>
+    <div class="bar-chart">
+      <div class="bar-item">
+        <div class="bar" style="height: 45%;"></div>
+        <span class="bar-label">Pzt</span>
+      </div>
+      <div class="bar-item">
+        <div class="bar" style="height: 62%;"></div>
+        <span class="bar-label">Sal</span>
+      </div>
+      <div class="bar-item">
+        <div class="bar" style="height: 78%;"></div>
+        <span class="bar-label">Çar</span>
+      </div>
+      <div class="bar-item">
+        <div class="bar" style="height: 55%;"></div>
+        <span class="bar-label">Per</span>
+      </div>
+      <div class="bar-item">
+        <div class="bar" style="height: 85%;"></div>
+        <span class="bar-label">Cum</span>
+      </div>
+      <div class="bar-item">
+        <div class="bar" style="height: 95%;"></div>
+        <span class="bar-label">Cmt</span>
+      </div>
+      <div class="bar-item">
+        <div class="bar" style="height: 72%;"></div>
+        <span class="bar-label">Paz</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TOP PLAYERS -->
+<section class="section">
+  <div class="section-header">
+    <span class="section-tag">EN İYİLER</span>
+    <h2>Haftanın <span style="color: var(--accent);">Oyuncuları</span></h2>
+  </div>
+  <div class="top-players-grid">
+    <div class="top-player-card">
+      <div class="top-player-rank gold">1</div>
+      <div class="top-player-avatar">🎮</div>
+      <div class="top-player-info">
+        <div class="top-player-name">NightShadow_TR</div>
+        <div class="top-player-stat">En uzun hayatta kalma</div>
+      </div>
+      <div class="top-player-value">87 Gün</div>
+    </div>
+    <div class="top-player-card">
+      <div class="top-player-rank silver">2</div>
+      <div class="top-player-avatar">⚔️</div>
+      <div class="top-player-info">
+        <div class="top-player-name">xBladeRunner</div>
+        <div class="top-player-stat">En çok mob öldürme</div>
+      </div>
+      <div class="top-player-value">2,341</div>
+    </div>
+    <div class="top-player-card">
+      <div class="top-player-rank bronze">3</div>
+      <div class="top-player-avatar">⛏️</div>
+      <div class="top-player-info">
+        <div class="top-player-name">CreeperHater99</div>
+        <div class="top-player-stat">En çek blok kırma</div>
+      </div>
+      <div class="top-player-value">45,892</div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVER HISTORY -->
+<section class="section" style="background: var(--bg2); border-top: 1px solid var(--border);">
+  <div class="section-header">
+    <span class="section-tag">SON OLAYLAR</span>
+    <h2>Sunucu <span style="color: var(--accent);">Geçmişi</span></h2>
+  </div>
+  <div class="server-history">
+    <div class="history-item">
+      <div class="history-time">2 dk önce</div>
+      <div class="history-event"><strong>MineQueen</strong> 38. gününde bir Creeper tarafından öldürüldü</div>
+    </div>
+    <div class="history-item">
+      <div class="history-time">15 dk önce</div>
+      <div class="history-event"><strong>NightShadow_TR</strong> 87. gününü tamamladı ve yeni rekor kırdı!</div>
+    </div>
+    <div class="history-item">
+      <div class="history-time">32 dk önce</div>
+      <div class="history-event"><strong>xBladeRunner</strong> Ender Dragon'u yalnız başına yendi</div>
+    </div>
+    <div class="history-item">
+      <div class="history-time">1 sa önce</div>
+      <div class="history-event"><strong>VoidWalker</strong> ilk elmaslarını buldu</div>
+    </div>
+    <div class="history-item">
+      <div class="history-time">2 sa önce</div>
+      <div class="history-event"><strong>LegendBro42</strong> 29. gününde lavda yandı</div>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="footer-top">
+    <div class="footer-brand">
+      <span class="logo-owl">⛏️</span>
+      <span class="logo-text">OWLISBA MC</span>
+      <p>Hardcore Minecraft Sunucusu</p>
+    </div>
+    <div class="footer-links">
+      <div class="footer-col">
+        <h4>Sayfalar</h4>
+        <a href="index.html">Ana Sayfa</a>
+        <a href="stats.html">İstatistikler</a>
+        <a href="ranks.html">Rütbeler</a>
+        <a href="rules.html">Kurallar</a>
+      </div>
+      <div class="footer-col">
+        <h4>Bağlantılar</h4>
+        <a href="https://discord.com/invite/f5wYekYN5y" target="_blank">Discord</a>
+        <a href="../owlisba-main/index.html">Ana Site</a>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2024 Owlisba Minecraft Sunucusu. Tüm hakları saklıdır.</p>
+    <p>Made with 🦉 + ⛏️</p>
+  </div>
+</footer>
+
+<a href="../owlisba-main/index.html" class="back-link" title="Ana Siteye Dön">
+  <i class="fa-solid fa-arrow-left"></i>
+</a>
+
+<script src="main.js"></script>
+</body>
+</html>
