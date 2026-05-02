@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Owlisba Minecraft Sunucusu — Hardcore Survival</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:wght@400;700&family=Syne:wght@400;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    :root {
+      --minecraft-green: #5b8c2a;
+      --minecraft-dark: #3d5c1a;
+      --minecraft-light: #7dc733;
+    }
+    
+    .minecraft-hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 100px 2rem;
+      text-align: center;
+      background: linear-gradient(180deg, #0d1a05 0%, #0a0a0f 100%);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .minecraft-hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: 
+        linear-gradient(rgba(91, 140, 42, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(91, 140, 42, 0.05) 1px, transparent 1px);
+      background-size: 40px 40px;
+    }
+    
+    .server-status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      letter-spacing: 2px;
+      color: var(--green);
+      background: rgba(57, 255, 20, 0.1);
+      border: 1px solid rgba(57, 255, 20, 0.3);
+      padding: 0.5rem 1.2rem;
+      border-radius: 100px;
+      margin-bottom: 2rem;
+      text-transform: uppercase;
+    }
+    
+    .server-status-badge::before {
+      content: '';
+      width: 8px;
+      height: 8px;
+      background: var(--green);
+      border-radius: 50%;
+      animation: blink 1.5s ease-in-out infinite;
+    }
+    
+    .minecraft-title {
+      font-family: var(--font-display);
+      font-size: clamp(3rem, 10vw, 8rem);
+      line-height: 0.9;
+      letter-spacing: 2px;
+      margin-bottom: 1rem;
+    }
+    
+    .minecraft-title span {
+      color: var(--minecraft-light);
+      text-shadow: 0 0 40px rgba(125, 199, 51, 0.3);
+    }
+    
+    .server-ip-box {
+      background: var(--surface);
+      border: 2px solid var(--minecraft-green);
+      border-radius: 12px;
+      padding: 1.5rem 2.5rem;
+      margin: 2rem 0;
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    
+    .server-ip-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--text3);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+    
+    .server-ip {
+      font-family: var(--font-mono);
+      font-size: 1.5rem;
+      color: var(--minecraft-light);
+      letter-spacing: 3px;
+    }
+    
+    .server-stats-bar {
+      display: flex;
+      gap: 3rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin: 2rem 0;
+    }
+    
+    .server-stat {
+      text-align: center;
+    }
+    
+    .server-stat-num {
+      font-family: var(--font-display);
+      font-size: 2.5rem;
+      color: var(--accent);
+    }
+    
+    .server-stat-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--text3);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      margin-top: 3rem;
+    }
+    
+    .feature-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 2rem;
+      text-align: center;
+      transition: var(--transition);
+    }
+    
+    .feature-card:hover {
+      transform: translateY(-5px);
+      border-color: var(--minecraft-green);
+    }
+    
+    .feature-icon {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+    }
+    
+    .feature-card h3 {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      letter-spacing: 1px;
+      margin-bottom: 0.5rem;
+    }
+    
+    .feature-card p {
+      color: var(--text2);
+      font-size: 0.9rem;
+      line-height: 1.6;
+    }
+    
+    .leaderboard-section {
+      background: var(--bg2);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 5rem 2.5rem;
+    }
+    
+    .leaderboard-table {
+      width: 100%;
+      border-collapse: collapse;
+      background: var(--surface);
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+    
+    .leaderboard-table th {
+      background: var(--surface2);
+      padding: 1rem 1.5rem;
+      text-align: left;
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--text3);
+      border-bottom: 1px solid var(--border);
+    }
+    
+    .leaderboard-table td {
+      padding: 1rem 1.5rem;
+      border-bottom: 1px solid rgba(42, 42, 61, 0.5);
+      font-size: 0.95rem;
+      color: var(--text2);
+    }
+    
+    .leaderboard-table tr:hover td {
+      background: rgba(91, 140, 42, 0.05);
+    }
+    
+    .leaderboard-table tr:last-child td {
+      border-bottom: none;
+    }
+    
+    .rank-num {
+      font-family: var(--font-display);
+      font-size: 1.4rem;
+      color: var(--text3);
+    }
+    
+    .rank-num.gold { color: #ffd700; }
+    .rank-num.silver { color: #c0c0c0; }
+    .rank-num.bronze { color: #cd7f32; }
+    
+    .status-alive {
+      color: var(--green);
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+    }
+    
+    .status-dead {
+      color: #e74c3c;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+    }
+    
+    .how-to-join {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+    
+    .join-step {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      text-align: center;
+      position: relative;
+    }
+    
+    .join-step-num {
+      position: absolute;
+      top: -15px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 30px;
+      height: 30px;
+      background: var(--accent);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-display);
+      font-size: 1rem;
+      color: #fff;
+    }
+    
+    .join-step i {
+      font-size: 2rem;
+      color: var(--minecraft-light);
+      margin: 0.5rem 0 1rem;
+    }
+    
+    .join-step h4 {
+      font-family: var(--font-display);
+      font-size: 1.2rem;
+      letter-spacing: 1px;
+      margin-bottom: 0.5rem;
+    }
+    
+    .join-step p {
+      color: var(--text2);
+      font-size: 0.85rem;
+    }
+    
+    .back-link {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text2);
+      font-size: 1.2rem;
+      transition: var(--transition);
+      z-index: 100;
+    }
+    
+    .back-link:hover {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff;
+      transform: translateY(-3px);
+    }
+    
+    @media (max-width: 900px) {
+      .feature-grid { grid-template-columns: 1fr; }
+      .how-to-join { grid-template-columns: 1fr 1fr; }
+      .server-stats-bar { gap: 1.5rem; }
+    }
+    
+    @media (max-width: 640px) {
+      .how-to-join { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-trail" id="cursorTrail"></div>
+
+<!-- NAV -->
+<nav class="navbar" id="navbar">
+  <div class="nav-logo">
+    <span class="logo-owl">⛏️</span>
+    <span class="logo-text">OWLISBA MC</span>
+  </div>
+  <ul class="nav-links">
+    <li><a href="index.html" class="active">Ana Sayfa</a></li>
+    <li><a href="stats.html">İstatistikler</a></li>
+    <li><a href="ranks.html">Rütbeler</a></li>
+    <li><a href="rules.html">Kurallar</a></li>
+  </ul>
+  <div class="nav-socials">
+    <a href="https://discord.com/invite/f5wYekYN5y" target="_blank" title="Discord"><i class="fa-brands fa-discord"></i></a>
+    <a href="../owlisba-main/index.html" title="Ana Site"><i class="fa-solid fa-arrow-left"></i></a>
+  </div>
+  <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+</nav>
+
+<div class="mobile-menu" id="mobileMenu">
+  <a href="index.html">Ana Sayfa</a>
+  <a href="stats.html">İstatistikler</a>
+  <a href="ranks.html">Rütbeler</a>
+  <a href="rules.html">Kurallar</a>
+  <div class="mobile-socials">
+    <a href="https://discord.com/invite/f5wYekYN5y" target="_blank"><i class="fa-brands fa-discord"></i> Discord</a>
+    <a href="../owlisba-main/index.html"><i class="fa-solid fa-arrow-left"></i> Ana Site</a>
+  </div>
+</div>
+
+<!-- HERO -->
+<section class="minecraft-hero">
+  <div class="server-status-badge">Sunucu Aktif</div>
+  <h1 class="minecraft-title">
+    <span>OWLISBA</span><br>
+    HARDCORE
+  </h1>
+  <p style="color: var(--text2); font-size: 1.1rem; max-width: 500px; line-height: 1.7;">
+    Sadece güçlülerin ayakta kaldığı, her hatanın ölümle sonuçlandığı 
+    hardcore Minecraft deneyimi. Girmeye cesur musun?
+  </p>
+  
+  <div class="server-ip-box">
+    <div>
+      <div class="server-ip-label">Sunucu Adresi</div>
+      <div class="server-ip">play.owlisba.net</div>
+    </div>
+    <button class="copy-btn" onclick="copyIP()">
+      <i class="fa-regular fa-copy"></i> Kopyala
+    </button>
+  </div>
+  
+  <div class="server-stats-bar">
+    <div class="server-stat">
+      <div class="server-stat-num live-player-count">47</div>
+      <div class="server-stat-label">Çevrimiçi Oyuncu</div>
+    </div>
+    <div class="server-stat">
+      <div class="server-stat-num">100</div>
+      <div class="server-stat-label">Maksimum Slot</div>
+    </div>
+    <div class="server-stat">
+      <div class="server-stat-num">1.21.x</div>
+      <div class="server-stat-label">Versiyon</div>
+    </div>
+    <div class="server-stat">
+      <div class="server-stat-num">87</div>
+      <div class="server-stat-label">Gün Rekoru</div>
+    </div>
+  </div>
+  
+  <div class="hero-buttons">
+    <a href="https://discord.com/invite/f5wYekYN5y" target="_blank" class="btn btn-discord">
+      <i class="fa-brands fa-discord"></i> Discord'a Katıl
+    </a>
+    <a href="stats.html" class="btn btn-secondary">
+      <i class="fa-solid fa-chart-line"></i> İstatistikler
+    </a>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="section">
+  <div class="section-header">
+    <span class="section-tag">SUNUCU ÖZELLİKLERİ</span>
+    <h2>Neden <span style="color: var(--minecraft-light);">Biz?</span></h2>
+  </div>
+  <div class="feature-grid">
+    <div class="feature-card">
+      <div class="feature-icon">💀</div>
+      <h3>Hardcore Mod</h3>
+      <p>Bir ölüm, her şeyin sonu. Eşyaların, evlerin, hikayen silinir. Her adımın önemi var.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🏆</div>
+      <h3>Liderlik Tablosu</h3>
+      <p>Haftalık ve aylık sıralamalar. En uzun süre hayatta kalan oyuncular ödüllendirilir.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🎉</div>
+      <h3>Etkinlikler</h3>
+      <p>Düzenli topluluk etkinlikleri, turnuvalar ve özel oyun modları.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🛡️</div>
+      <h3>Anti-Cheat</h3>
+      <p>Gelişmiş hile koruması ve adil oyun ortamı. Hile yapan anında banlanır.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">⭐</div>
+      <h3>Başarım Sistemi</h3>
+      <p>Özel başarımlar ve rozetler. Oyun stiline göre ödüller kazan.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">💬</div>
+      <h3>Discord Entegrasyonu</h3>
+      <p>Sunucu bildirimleri, canlı sohbet ve topluluk desteği.</p>
+    </div>
+  </div>
+</section>
+
+<!-- LEADERBOARD -->
+<section class="leaderboard-section">
+  <div style="max-width: 1300px; margin: 0 auto;">
+    <div class="section-header">
+      <span class="section-tag">BU SEZONUN LİDERLERİ</span>
+      <h2>Sıralama <span style="color: var(--minecraft-light);">Tablosu</span></h2>
+    </div>
+    <table class="leaderboard-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Oyuncu</th>
+          <th>Hayatta Kalma</th>
+          <th>Öldürdüğü Mob</th>
+          <th>Başarım</th>
+          <th>Durum</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="rank-num gold">1</span></td>
+          <td><strong>NightShadow_TR</strong></td>
+          <td>87 gün</td>
+          <td>2,341</td>
+          <td>🏆 Ölümsüz</td>
+          <td><span class="status-alive">● HAYATTA</span></td>
+        </tr>
+        <tr>
+          <td><span class="rank-num silver">2</span></td>
+          <td><strong>xBladeRunner</strong></td>
+          <td>64 gün</td>
+          <td>1,879</td>
+          <td>⚔️ Savaşçı</td>
+          <td><span class="status-alive">● HAYATTA</span></td>
+        </tr>
+        <tr>
+          <td><span class="rank-num bronze">3</span></td>
+          <td><strong>CreeperHater99</strong></td>
+          <td>51 gün</td>
+          <td>1,203</td>
+          <td>💎 Zanaatkar</td>
+          <td><span class="status-alive">● HAYATTA</span></td>
+        </tr>
+        <tr>
+          <td><span class="rank-num">4</span></td>
+          <td>VoidWalker</td>
+          <td>43 gün</td>
+          <td>988</td>
+          <td>🌿 Kaşif</td>
+          <td><span class="status-alive">● HAYATTA</span></td>
+        </tr>
+        <tr>
+          <td><span class="rank-num">5</span></td>
+          <td>MineQueen</td>
+          <td>38 gün</td>
+          <td>754</td>
+          <td>🔥 Ateş Ustası</td>
+          <td><span class="status-dead">✕ ÖLDÜ</span></td>
+        </tr>
+        <tr>
+          <td><span class="rank-num">6</span></td>
+          <td>LegendBro42</td>
+          <td>29 gün</td>
+          <td>612</td>
+          <td>🗡️ Kahraman</td>
+          <td><span class="status-dead">✕ ÖLDÜ</span></td>
+        </tr>
+      </tbody>
+    </table>
+    <p style="font-family: var(--font-mono); font-size: 0.72rem; color: var(--text3); margin-top: 1rem; text-align: right;">
+      Son güncelleme: Az önce • <a href="stats.html" style="color: var(--accent);">Tüm sıralama →</a>
+    </p>
+  </div>
+</section>
+
+<!-- HOW TO JOIN -->
+<section class="section">
+  <div class="section-header">
+    <span class="section-tag">NASIL KATILIRIM?</span>
+    <h2>Sunucuya <span style="color: var(--minecraft-light);">Katıl</span></h2>
+  </div>
+  <div class="how-to-join">
+    <div class="join-step">
+      <div class="join-step-num">1</div>
+      <i class="fa-brands fa-minecraft"></i>
+      <h4>Minecraft'ı Aç</h4>
+      <p>Java Edition 1.21.x sürümünü kullan</p>
+    </div>
+    <div class="join-step">
+      <div class="join-step-num">2</div>
+      <i class="fa-solid fa-server"></i>
+      <h4>Sunucu Ekle</h4>
+      <p>Çok Oyunculu &gt; Sunucu Ekle</p>
+    </div>
+    <div class="join-step">
+      <div class="join-step-num">3</div>
+      <i class="fa-solid fa-keyboard"></i>
+      <h4>IP Gir</h4>
+      <p>play.owlisba.net yaz ve kaydet</p>
+    </div>
+    <div class="join-step">
+      <div class="join-step-num">4</div>
+      <i class="fa-solid fa-gamepad"></i>
+      <h4>Oyna!</h4>
+      <p>Sunucuya bağlan ve hayatta kal</p>
+    </div>
+  </div>
+  <div class="section-cta">
+    <a href="rules.html" class="btn btn-outline">
+      <i class="fa-solid fa-book"></i> Kuralları Oku
+    </a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-top">
+    <div class="footer-brand">
+      <span class="logo-owl">⛏️</span>
+      <span class="logo-text">OWLISBA MC</span>
+      <p>Hardcore Minecraft Sunucusu</p>
+    </div>
+    <div class="footer-links">
+      <div class="footer-col">
+        <h4>Sayfalar</h4>
+        <a href="index.html">Ana Sayfa</a>
+        <a href="stats.html">İstatistikler</a>
+        <a href="ranks.html">Rütbeler</a>
+        <a href="rules.html">Kurallar</a>
+      </div>
+      <div class="footer-col">
+        <h4>Bağlantılar</h4>
+        <a href="https://discord.com/invite/f5wYekYN5y" target="_blank">Discord</a>
+        <a href="../owlisba-main/index.html">Ana Site</a>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2024 Owlisba Minecraft Sunucusu. Tüm hakları saklıdır.</p>
+    <p>Made with 🦉 + ⛏️</p>
+  </div>
+</footer>
+
+<!-- Back to Main Site -->
+<a href="../owlisba-main/index.html" class="back-link" title="Ana Siteye Dön">
+  <i class="fa-solid fa-arrow-left"></i>
+</a>
+
+<script src="main.js"></script>
+<script>
+  function copyIP() {
+    navigator.clipboard.writeText('play.owlisba.net').then(() => {
+      const btn = document.querySelector('.copy-btn');
+      const originalHTML = btn.innerHTML;
+      btn.innerHTML = '<i class="fa-solid fa-check"></i> Kopyalandı!';
+      btn.style.background = 'var(--green)';
+      setTimeout(() => {
+        btn.innerHTML = originalHTML;
+        btn.style.background = '';
+      }, 2000);
+    });
+  }
+</script>
+</body>
+</html>
